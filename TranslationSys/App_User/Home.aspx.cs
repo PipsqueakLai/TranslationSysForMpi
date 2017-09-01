@@ -18,6 +18,7 @@ namespace TranslationSys
             string someScript = "$(document).ready(function () {var sidebar = $('#page-sidebar');sidebar.addClass('page-sidebar-left');sidebar.removeClass('page-sidebar-hide');var content=$('#page-content');content.addClass('page-sidebar-content')})";
             ClientScript.RegisterStartupScript(this.GetType(), "x", someScript, true);
            
+
         }
     }
 }
