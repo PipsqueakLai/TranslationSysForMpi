@@ -13,6 +13,7 @@
     </asp:PlaceHolder>
     <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/CSS/styleSheet.css" rel="stylesheet" />
 
 </head>
 <body>
@@ -46,7 +47,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="~/" runat="server" style="position:absolute;width: 90%; left: 0; text-align: center; margin: 0 auto;">澳門政府公共部門公文翻譯系統 -- 澳門理工學院</a>
+                    <a class="navbar-brand" href="~/" runat="server" style="position: absolute; width: 90%; left: 0; text-align: center; margin: 0 auto;">澳門政府公共部門公文翻譯系統 -- 澳門理工學院</a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
@@ -74,7 +75,21 @@
                 </div>
             </div>
         </div>
-        <div class="container body-content">
+
+
+        <div class="page-sidebar-hide" id="page-sidebar">
+                <ul class="sidebar-list-group">
+                    <li class="sidebar-list-item"><a href="#">未翻譯文件</a></li>
+                    <li class="sidebar-list-item"><a href="#">已翻譯文件</a></li>
+                    <li class="sidebar-list-item"><a href="#">..文件</a></li>
+                </ul>
+        </div>
+
+
+
+
+
+        <div class="container body-content" id="page-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
 

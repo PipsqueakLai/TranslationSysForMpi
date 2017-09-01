@@ -1,1 +1,40 @@
-﻿
+﻿.page-sidebar-left {
+    width: 200px;
+    height: 640px;
+    float: left;
+}
+.page-sidebar-hide {
+    display:none;
+}
+
+.page-sidebar-content {
+
+    float:left ;
+}
+
+.sidebar-list-item {
+    border-bottom: 1px solid #ddd;
+    display: block;
+    font-size: 20px;
+    padding: 10px;
+}
+
+    .sidebar-list-item a {
+        padding:2px;
+        padding-left: 30px;
+        
+    }
+
+.sidebar-list-group{
+    margin-top:60px;
+    padding:0;
+
+}
+
+
+.page-content {
+    height: 640px;
+}
+.page-content table{
+    margin:20px;
+}

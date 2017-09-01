@@ -320,7 +320,7 @@
     <Content Include="CSS\bootstrap-datetimepicker.css" />
     <Content Include="CSS\bootstrap-datetimepicker.min.css" />
     <Content Include="CSS\jquery-ui.css" />
-    <Content Include="CSS\StyleSheet.css" />
+    <Content Include="CSS\styleSheet.css" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
