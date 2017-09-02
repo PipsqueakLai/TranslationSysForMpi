@@ -1178,8 +1178,8 @@ namespace TranslationSys
 
 
             // Create a document in memory:
-            var doc = DocX.Load(Server.MapPath("..\\Template") + "\\" + table + ".docx");
-
+            var doc1 = DocX.Load(Server.MapPath("..\\Template") + "\\" + table + ".docx");
+            var doc2 = DocX.Load(Server.MapPath("..\\Template") + "\\" + table + ".docx");
 
             System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True");
             connection.Open();
@@ -1198,20 +1198,28 @@ namespace TranslationSys
             else if (table == "G") { txtTypeZH = "公函"; txtTypePT = "cartas"; }
             else if (table == "N") { txtTypeZH = "新聞稿"; txtTypePT = "Press Release"; }
 
-            doc.ReplaceText("Table", txtTypeZH);
-            doc.ReplaceText("Title", InputTitleZH.Text);
+            doc1.ReplaceText("Table", txtTypeZH);
+            doc1.ReplaceText("Title", InputTitleZH.Text);
+            doc2.ReplaceText("Table", txtTypePT);
+            doc2.ReplaceText("Title", InputTitlePT.Text);
 
             if (table == "P")
             {
-                doc.ReplaceText("Type",CodeToString(type));
-                doc.ReplaceText("Time", txtDatePicker.Text);
-                doc.ReplaceText("Code", FileName.Text);
+                doc1.ReplaceText("Type",CodeToString(type));
+                doc1.ReplaceText("Time", txtDatePicker.Text);
+                doc1.ReplaceText("Code", FileName.Text);
+                doc2.ReplaceText("Type", CodeToString(type));
+                doc2.ReplaceText("Time", txtDatePicker.Text);
+                doc2.ReplaceText("Code", FileName.Text);
 
 
                 String[] zhData = new String[x];
+                String[] ptData = new String[x];
 
                 int lblzh = 1;
                 int txtzh = 1;
+                int lblpt = 1;
+                int txtpt = 1;
                 for (int i = 1; i <= 3&&i<=x; i++)
                 {
                     String rowZHSQL = "Select Row" + i + " From " + table + "Table Where Language = 'ZH' AND Type = '" + type + "ZH'";
@@ -1220,16 +1228,16 @@ namespace TranslationSys
 
                     if (rowZHString.Equals("TextBox"))
                     {
-                        if (ListPointCB.Checked) { doc.ReplaceText("Paragraph"+i, ((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropZH" + i)).Text + ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh)).Text); }
-                        else { doc.ReplaceText("Paragraph"+i,((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh)).Text); }
+                        if (ListPointCB.Checked) { doc1.ReplaceText("Paragraph"+i, ((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropZH" + i)).Text + ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh)).Text); }
+                        else { doc1.ReplaceText("Paragraph"+i,((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh)).Text); }
                         zhData[i - 1] = ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh++)).Text;
                     }
                     else
                     {
-                        doc.InsertParagraph();
+                        doc1.InsertParagraph();
                         if (ListPointCB.Checked)
-                        { doc.ReplaceText("Paragraph" + i, ((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropZH" + i)).Text + ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelZH" + lblzh)).Text); }
-                        else { doc.ReplaceText("Paragraph" + i, ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelZH" + lblzh)).Text); }
+                        { doc1.ReplaceText("Paragraph" + i, ((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropZH" + i)).Text + ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelZH" + lblzh)).Text); }
+                        else { doc1.ReplaceText("Paragraph" + i, ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelZH" + lblzh)).Text); }
                         zhData[i - 1] = ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelZH" + lblzh++)).Text;
                     }
                 }
@@ -1241,26 +1249,75 @@ namespace TranslationSys
                     string rowZHString = Convert.ToString(rowZHCommand.ExecuteScalar());
                     if (rowZHString.Equals("TextBox"))
                     {
-                        if (ListPointCB.Checked) { doc.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropZH" + i)).Text + ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh)).Text); }
-                        else { doc.InsertParagraph(((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh)).Text); }
+                        if (ListPointCB.Checked) { doc1.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropZH" + i)).Text + ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh)).Text); }
+                        else { doc1.InsertParagraph(((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh)).Text); }
                         zhData[i - 1] = ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh++)).Text;
                     }
                     else
                     {
-                        doc.InsertParagraph();
+                        doc1.InsertParagraph();
                         if (ListPointCB.Checked)
-                        { doc.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropZH" + i)).Text + ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelZH" + lblzh)).Text).Bold(); }
-                        else { doc.InsertParagraph(((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelZH" + lblzh)).Text).Bold(); }
+                        { doc1.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropZH" + i)).Text + ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelZH" + lblzh)).Text).Bold(); }
+                        else { doc1.InsertParagraph(((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelZH" + lblzh)).Text).Bold(); }
                         zhData[i - 1] = ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelZH" + lblzh++)).Text;
                     }
                 }
+
+                doc1.InsertSectionPageBreak();
+
+                for (int i = 1; i <= 3 && i <= x; i++)
+                {
+                    String rowPTSQL = "Select Row" + i + " From " + table + "Table Where Language = 'PT' AND Type = '" + type + "PT'";
+                    System.Data.SqlClient.SqlCommand rowPTCommand = new System.Data.SqlClient.SqlCommand(rowPTSQL, connection);
+                    string rowPTString = Convert.ToString(rowPTCommand.ExecuteScalar());
+
+                    if (rowPTString.Equals("TextBox"))
+                    {
+                        if (ListPointCB.Checked) { doc2.ReplaceText("Paragraph" + i, ((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropPT" + i)).Text + ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputPT" + txtpt)).Text); }
+                        else { doc2.ReplaceText("Paragraph" + i, ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputPT" + txtpt)).Text); }
+                        ptData[i - 1] = ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputPT" + txtpt++)).Text;
+                    }
+                    else
+                    {
+                        doc2.InsertParagraph();
+                        if (ListPointCB.Checked)
+                        { doc2.ReplaceText("Paragraph" + i, ((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropPT" + i)).Text + ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelPT" + lblpt)).Text); }
+                        else { doc2.ReplaceText("Paragraph" + i, ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelPT" + lblpt)).Text); }
+                        ptData[i - 1] = ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelPT" + lblpt++)).Text;
+                    }
+                }
+
+                for (int i = 4; i <= x; i++)
+                {
+                    String rowPTSQL = "Select Row" + i + " From " + table + "Table Where Language = 'PT' AND Type = '" + type + "PT'";
+                    System.Data.SqlClient.SqlCommand rowPTCommand = new System.Data.SqlClient.SqlCommand(rowPTSQL, connection);
+                    string rowPTString = Convert.ToString(rowPTCommand.ExecuteScalar());
+                    if (rowPTString.Equals("TextBox"))
+                    {
+                        if (ListPointCB.Checked) { doc2.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropPT" + i)).Text + ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputPT" + txtpt)).Text); }
+                        else { doc2.InsertParagraph(((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputPT" + txtpt)).Text); }
+                        ptData[i - 1] = ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputPT" + txtpt++)).Text;
+                    }
+                    else
+                    {
+                        doc2.InsertParagraph();
+                        if (ListPointCB.Checked)
+                        { doc2.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropPT" + i)).Text + ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelPT" + lblpt)).Text).Bold(); }
+                        else { doc2.InsertParagraph(((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelPT" + lblpt)).Text).Bold(); }
+                        ptData[i - 1] = ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelPT" + lblpt++)).Text;
+                    }
+                }
+                doc1.InsertDocument(doc2);
             }
             else
             {
                 String[] zhData = new String[x];
+                String[] ptData = new String[x];
 
                 int lblzh = 1;
                 int txtzh = 1;
+                int lblpt = 1;
+                int txtpt = 1;
                 for (int i = 1; i <= x; i++)
                 {
                     String rowZHSQL = "Select Row" + i + " From " + table + "Table Where Language = 'ZH' AND Type = '" + type + "ZH'";
@@ -1268,19 +1325,42 @@ namespace TranslationSys
                     string rowZHString = Convert.ToString(rowZHCommand.ExecuteScalar());
                     if (rowZHString.Equals("TextBox"))
                     {
-                        if (ListPointCB.Checked) { doc.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropZH" + i)).Text + ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh)).Text); }
-                        else { doc.InsertParagraph(((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh)).Text); }
+                        if (ListPointCB.Checked) { doc1.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropZH" + i)).Text + ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh)).Text); }
+                        else { doc1.InsertParagraph(((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh)).Text); }
                         zhData[i - 1] = ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh++)).Text;
                     }
                     else
                     {
-                        doc.InsertParagraph();
+                        doc1.InsertParagraph();
                         if (ListPointCB.Checked)
-                        { doc.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropZH" + i)).Text + ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelZH" + lblzh)).Text).Bold(); }
-                        else { doc.InsertParagraph(((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelZH" + lblzh)).Text).Bold(); }
+                        { doc1.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropZH" + i)).Text + ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelZH" + lblzh)).Text).Bold(); }
+                        else { doc1.InsertParagraph(((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelZH" + lblzh)).Text).Bold(); }
                         zhData[i - 1] = ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelZH" + lblzh++)).Text;
                     }
                 }
+                doc1.InsertSectionPageBreak();
+                for (int i = 1; i <= x; i++)
+                {
+                    String rowPTSQL = "Select Row" + i + " From " + table + "Table Where Language = 'PT' AND Type = '" + type + "PT'";
+                    System.Data.SqlClient.SqlCommand rowZHCommand = new System.Data.SqlClient.SqlCommand(rowPTSQL, connection);
+                    string rowPTString = Convert.ToString(rowZHCommand.ExecuteScalar());
+                    if (rowPTString.Equals("TextBox"))
+                    {
+                        if (ListPointCB.Checked) {doc2.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropPT" + i)).Text + ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputPT" + txtpt)).Text); }
+                        else { doc2.InsertParagraph(((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputPT" + txtpt)).Text); }
+                        ptData[i - 1] = ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputPT" + txtpt++)).Text;
+                    }
+                    else
+                    {
+                        doc2.InsertParagraph();
+                        if (ListPointCB.Checked)
+                        {doc2.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropPT" + i)).Text + ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelPT" + lblpt)).Text).Bold(); }
+                        else { doc2.InsertParagraph(((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelPT" + lblpt)).Text).Bold(); }
+                        ptData[i - 1] = ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelPT" + lblpt++)).Text;
+                    }
+                    
+                }
+                doc1.InsertDocument(doc2);
             }
 
             //var TitleLineFormat = new Novacode.Formatting();
@@ -1367,7 +1447,8 @@ namespace TranslationSys
             //}
             //doc.InsertParagraph(txtDatePicker.Text);
 
-            doc.SaveAs(fileName);
+            doc1.SaveAs(fileName);
+            
 
             //for (int i = 0; i < x; i++)
             //{
@@ -1764,7 +1845,12 @@ namespace TranslationSys
                     connection.Open();
                     String selectSQL1 = @"SELECT PT FROM Dictionary WHERE ZH = N'" + x + "'";
                     System.Data.SqlClient.SqlCommand myCommand1 = new System.Data.SqlClient.SqlCommand(selectSQL1, connection);
-                    string replaceword = " " + myCommand1.ExecuteScalar().ToString() + " ";
+                    var result = myCommand1.ExecuteScalar();
+                    if (result == null)
+                    {
+                        return null;
+                    }
+                    string replaceword = " " + result.ToString() + " ";
                     string a = s.Substring(0, i);
                     string b = s.Substring(i + x.Length);
                     s = a + replaceword + b;

@@ -37,7 +37,7 @@ namespace TranslationSys.Account
         protected void CreateRole_Click(object sender, EventArgs e)
         {
             
-            var role = new IdentityRole() { Name = "User" };
+            var role = new IdentityRole() { Name = "Senior Translator" };
             var roleManager = Context.GetOwinContext().GetUserManager<ApplicationRoleManager>();
             IdentityResult result = roleManager.Create(role);
 

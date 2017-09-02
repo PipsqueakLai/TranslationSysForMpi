@@ -39,7 +39,7 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <asp:Button runat="server" OnClick="CreateUser_Click" Text="Register" CssClass="btn btn-default" />
-                <asp:Button runat="server" OnClick="CreateRole_Click" Text="CreateRole" CssClass="btn btn-default" />
+                <asp:Button runat="server" OnClick="CreateRole_Click" Text="CreateRole" CssClass="btn btn-default" CausesValidation="False" />
             </div>
         </div>
     </div>

@@ -38,7 +38,8 @@ namespace TranslationSys.Account
                 switch (result)
                 {
                     case SignInStatus.Success:
-                        IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
+                        //IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
+                        Response.Redirect("/App_User/Home");
                         break;
                     case SignInStatus.LockedOut:
                         Response.Redirect("/Account/Lockout");
