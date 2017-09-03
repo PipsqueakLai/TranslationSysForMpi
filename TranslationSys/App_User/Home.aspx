@@ -13,7 +13,7 @@
                         <asp:TextBox ID="TextBox2" runat="server" Text='<%# Bind("Title") %>'></asp:TextBox>
                     </EditItemTemplate>
                     <ItemTemplate>
-                        <asp:LinkButton ID="LinkButton1" runat="server" Text='<%# Bind("Title") %>' OnClick="LinkButteon1_Click" CommandArgument='<%# Bind("FileName") %>'></asp:LinkButton>
+                        <asp:LinkButton ID="LinkButton1" runat="server" Text='<%# Bind("Title") %>' OnClick="LinkButteon1_Click" CommandArgument='<%# Bind("FileId") %>'></asp:LinkButton>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Type" SortExpression="Type">

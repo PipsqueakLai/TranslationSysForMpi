@@ -11,6 +11,8 @@ using System.Text;
 using System.IO;
 using System.Collections;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace TranslationSys
 {
@@ -1203,9 +1205,12 @@ namespace TranslationSys
             doc2.ReplaceText("Table", txtTypePT);
             doc2.ReplaceText("Title", InputTitlePT.Text);
 
+            String[] zhData = new String[x];
+            String[] ptData = new String[x];
+
             if (table == "P")
             {
-                doc1.ReplaceText("Type",CodeToString(type));
+                doc1.ReplaceText("Type", CodeToString(type));
                 doc1.ReplaceText("Time", txtDatePicker.Text);
                 doc1.ReplaceText("Code", FileName.Text);
                 doc2.ReplaceText("Type", CodeToString(type));
@@ -1213,14 +1218,13 @@ namespace TranslationSys
                 doc2.ReplaceText("Code", FileName.Text);
 
 
-                String[] zhData = new String[x];
-                String[] ptData = new String[x];
+
 
                 int lblzh = 1;
                 int txtzh = 1;
                 int lblpt = 1;
                 int txtpt = 1;
-                for (int i = 1; i <= 3&&i<=x; i++)
+                for (int i = 1; i <= 3 && i <= x; i++)
                 {
                     String rowZHSQL = "Select Row" + i + " From " + table + "Table Where Language = 'ZH' AND Type = '" + type + "ZH'";
                     System.Data.SqlClient.SqlCommand rowZHCommand = new System.Data.SqlClient.SqlCommand(rowZHSQL, connection);
@@ -1228,8 +1232,8 @@ namespace TranslationSys
 
                     if (rowZHString.Equals("TextBox"))
                     {
-                        if (ListPointCB.Checked) { doc1.ReplaceText("Paragraph"+i, ((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropZH" + i)).Text + ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh)).Text); }
-                        else { doc1.ReplaceText("Paragraph"+i,((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh)).Text); }
+                        if (ListPointCB.Checked) { doc1.ReplaceText("Paragraph" + i, ((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropZH" + i)).Text + ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh)).Text); }
+                        else { doc1.ReplaceText("Paragraph" + i, ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh)).Text); }
                         zhData[i - 1] = ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputZH" + txtzh++)).Text;
                     }
                     else
@@ -1311,8 +1315,7 @@ namespace TranslationSys
             }
             else
             {
-                String[] zhData = new String[x];
-                String[] ptData = new String[x];
+
 
                 int lblzh = 1;
                 int txtzh = 1;
@@ -1346,7 +1349,7 @@ namespace TranslationSys
                     string rowPTString = Convert.ToString(rowZHCommand.ExecuteScalar());
                     if (rowPTString.Equals("TextBox"))
                     {
-                        if (ListPointCB.Checked) {doc2.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropPT" + i)).Text + ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputPT" + txtpt)).Text); }
+                        if (ListPointCB.Checked) { doc2.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropPT" + i)).Text + ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputPT" + txtpt)).Text); }
                         else { doc2.InsertParagraph(((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputPT" + txtpt)).Text); }
                         ptData[i - 1] = ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputPT" + txtpt++)).Text;
                     }
@@ -1354,110 +1357,18 @@ namespace TranslationSys
                     {
                         doc2.InsertParagraph();
                         if (ListPointCB.Checked)
-                        {doc2.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropPT" + i)).Text + ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelPT" + lblpt)).Text).Bold(); }
+                        { doc2.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropPT" + i)).Text + ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelPT" + lblpt)).Text).Bold(); }
                         else { doc2.InsertParagraph(((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelPT" + lblpt)).Text).Bold(); }
                         ptData[i - 1] = ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelPT" + lblpt++)).Text;
                     }
-                    
+
                 }
                 doc1.InsertDocument(doc2);
             }
 
-            //var TitleLineFormat = new Novacode.Formatting();
-            //TitleLineFormat.Size = 16D;
-            //TitleLineFormat.Bold = true;
 
-            //var LineFormat = new Novacode.Formatting();
-            //LineFormat.Position = 12;
-
-            //var HeaderLineFormat = new Novacode.Formatting();
-            //HeaderLineFormat.Size = 12D;
-            //HeaderLineFormat.FontColor = Color.Black;//NOT WoRK
-
-
-            //doc.AddHeaders();
-            //Novacode.Paragraph evenParagraph1 = doc.Headers.even.InsertParagraph("招標案卷", false, HeaderLineFormat);
-            //evenParagraph1.Alignment = Alignment.right;
-            //Novacode.Paragraph evenParagraph2 = doc.Headers.even.InsertParagraph(Typelbl.Text, false, HeaderLineFormat);
-            //evenParagraph2.Alignment = Alignment.right;
-
-            //doc.AddFooters();
-
-            //Novacode.Paragraph oddFooter1 = doc.Footers.odd.InsertParagraph();
-            //oddFooter1.Alignment = Alignment.center;
-            //oddFooter1.AppendPageNumber(PageNumberFormat.normal);
-
-            //Novacode.Paragraph evenFooter = doc.Footers.even.InsertParagraph();
-            //evenFooter.Alignment = Alignment.center;
-            //evenFooter.AppendPageNumber(PageNumberFormat.normal);
-
-            //Novacode.Paragraph oddParagraph1 = doc.Headers.odd.InsertParagraph("招標案卷", false, HeaderLineFormat);
-            //oddParagraph1.Alignment = Alignment.right;
-            //Novacode.Paragraph oddParagraph2 = doc.Headers.odd.InsertParagraph(Typelbl.Text, false, HeaderLineFormat);
-            //oddParagraph2.Alignment = Alignment.right;
-
-            //doc.InsertParagraph(txtTypeZH, false, TitleLineFormat).Alignment = Alignment.center;
-            //doc.InsertParagraph(InputTitleZH.Text, false, TitleLineFormat).Alignment = Alignment.center;
-
-
-            //doc.InsertParagraph(txtDatePicker.Text);
-            //doc.InsertSectionPageBreak();
-
-            //evenParagraph1.Remove(false);
-            //evenParagraph2.Remove(false);
-            //oddParagraph1.Remove(false);
-            //oddParagraph2.Remove(false);
-            //doc.Headers.even.RemoveParagraph(evenParagraph1);
-            //doc.Headers.even.RemoveParagraph(evenParagraph2);
-            //doc.Headers.odd.RemoveParagraph(oddParagraph1);
-            //doc.Headers.odd.RemoveParagraph(oddParagraph2);
-
-            //doc.Headers.even.InsertParagraph("Processo de Concurso", false, HeaderLineFormat).Alignment = Alignment.right;
-            //doc.Headers.even.InsertParagraph("Anexo II –  Programa do Concurso", false, HeaderLineFormat).Alignment = Alignment.right;
-            //doc.Headers.odd.InsertParagraph("Processo de Concurso", false, HeaderLineFormat).Alignment = Alignment.right;
-            //doc.Headers.odd.InsertParagraph("Anexo II –  Programa do Concurso", false, HeaderLineFormat).Alignment = Alignment.right;
-
-
-            //doc.InsertParagraph(txtTypePT, false, TitleLineFormat).Alignment = Alignment.center;
-            //doc.InsertParagraph(InputTitlePT.Text, false, TitleLineFormat).Alignment = Alignment.center;
-            //String[] ptData = new String[x];
-
-            //int txtpt = 1;
-            //int lblpt = 1;
-            //for (int i = 1; i <= x; i++)
-            //{
-            //    String rowPTSQL = "Select Row" + i + " From " + table + "Table Where Language = 'PT' AND Type = '" + type + "PT'";
-            //    System.Data.SqlClient.SqlCommand rowPTCommand = new System.Data.SqlClient.SqlCommand(rowPTSQL, connection);
-            //    string rowPTString = Convert.ToString(rowPTCommand.ExecuteScalar());
-
-
-            //    if (rowPTString.Equals("TextBox"))
-            //    {
-            //        if (CheckBox1.Checked) { doc.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropPT" + i)).Text + ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputPT" + txtpt)).Text, false, LineFormat); }
-            //        else { doc.InsertParagraph(((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputPT" + txtpt)).Text, false, LineFormat); }
-            //        ptData[i - 1] = ((TextBox)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("InputPT" + txtpt++)).Text;
-            //    }
-            //    else
-            //    {
-            //        doc.InsertParagraph();
-            //        if (CheckBox1.Checked) { doc.InsertParagraph(((DropDownList)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("DropPT" + i)).Text + ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelPT" + lblpt)).Text, false, LineFormat).Bold(); }
-            //        else { doc.InsertParagraph(((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelPT" + lblpt)).Text, false, LineFormat).Bold(); }
-            //        ptData[i - 1] = ((Label)((ContentPlaceHolder)this.Master.FindControl("MainContent")).FindControl("LabelPT" + lblpt++)).Text;
-            //    }
-            //}
-            //doc.InsertParagraph(txtDatePicker.Text);
 
             doc1.SaveAs(fileName);
-            
-
-            //for (int i = 0; i < x; i++)
-            //{
-            //    String insertSQL = "Insert into Data (ZH, PT) Values (@zh, @pt);";
-            //    System.Data.SqlClient.SqlCommand insertCommand = new System.Data.SqlClient.SqlCommand(insertSQL, connection);
-            //    insertCommand.Parameters.AddWithValue("@zh", zhData[i]);
-            //    insertCommand.Parameters.AddWithValue("@pt", ptData[i]);
-            //    insertCommand.ExecuteNonQuery();
-            //}
 
             System.IO.FileInfo file2 = new System.IO.FileInfo(fileName);
             if (file2.Exists)
@@ -1468,10 +1379,57 @@ namespace TranslationSys
                 myCommand.Parameters.AddWithValue("@fileName", fn);
                 myCommand.Parameters.AddWithValue("@date", txtDatePicker.Text);
                 myCommand.Parameters.AddWithValue("@type", type);
-                myCommand.Parameters.AddWithValue("@status",0);
-                myCommand.Parameters.AddWithValue("@title",InputTitleZH.Text);
-                myCommand.Parameters.AddWithValue("@userid",User.Identity.GetUserId().ToString());
+                myCommand.Parameters.AddWithValue("@status", 0);
+                myCommand.Parameters.AddWithValue("@title", InputTitleZH.Text);
+                myCommand.Parameters.AddWithValue("@userid", User.Identity.GetUserId().ToString());
                 myCommand.ExecuteNonQuery();
+
+                string id = Guid.NewGuid().ToString();
+                String insertSQLZH = "Insert into Data (ID,Language,Title";
+                for (int i = 1; i <= x; i++)
+                {
+                    insertSQLZH += ",Row" + i;
+                }
+                insertSQLZH += ") Values (@id,@language,@title";
+                for (int i = 1; i <= x; i++)
+                {
+                    insertSQLZH += ",@row" + i;
+                }
+                insertSQLZH += ")";
+
+                SqlCommand insertCommandZH = new SqlCommand(insertSQLZH, connection);
+                insertCommandZH.Parameters.AddWithValue("@id", id);
+                insertCommandZH.Parameters.AddWithValue("@language", "ZH");
+                insertCommandZH.Parameters.AddWithValue("@title", InputTitleZH.Text);
+                for (int i = 1; i <= x; i++)
+                {
+                    insertCommandZH.Parameters.AddWithValue("@row" + i, zhData[i-1]);
+                }
+                insertCommandZH.ExecuteNonQuery();
+                
+                String insertSQLPT = "Insert into Data (ID,Language,Title";
+                for (int i = 1; i <= x; i++)
+                {
+                    insertSQLPT += ",Row" + i;
+                }
+                insertSQLPT += ") Values (@id,@language,@title";
+                for (int i = 1; i <= x; i++)
+                {
+                    insertSQLPT += ",@row" + i;
+                }
+                insertSQLPT += ")";
+
+                SqlCommand insertCommandPT = new SqlCommand(insertSQLPT, connection);
+                insertCommandPT.Parameters.AddWithValue("@id", id);
+                insertCommandPT.Parameters.AddWithValue("@language", "PT");
+                insertCommandPT.Parameters.AddWithValue("@title", InputTitlePT.Text);
+                for (int i = 1; i <= x; i++)
+                {
+                    insertCommandPT.Parameters.AddWithValue("@row" + i, ptData[i - 1]);
+                }
+                insertCommandPT.ExecuteNonQuery();
+
+
 
                 Response.Clear();
                 Response.AddHeader("Content-Disposition", "attachment; filename=" + file2.Name);
@@ -1479,7 +1437,7 @@ namespace TranslationSys
                 Response.ContentType = "application/octet-stream";
                 Response.WriteFile(file2.FullName);
                 Response.End();
-                
+
 
             }
             else
@@ -1491,7 +1449,7 @@ namespace TranslationSys
 
 
         }
-        
+
 
         void getID(string code)
         {
