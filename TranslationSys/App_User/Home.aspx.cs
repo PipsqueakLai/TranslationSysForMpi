@@ -18,6 +18,7 @@ namespace TranslationSys
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
                 Label label1 = (Label)e.Row.FindControl("Label1");
+                LinkButton linkbutton1 = (LinkButton)e.Row.FindControl("LinkButton1");
                 string status = label1.Text;
                 if (status == "0")
                 {
@@ -26,8 +27,10 @@ namespace TranslationSys
                 }
                 else if (status == "1")
                 {
-                    label1.Text = "初步翻譯";
+                    label1.Text = "翻譯中";
                     label1.Attributes.Add("class", "label label-info");
+                    if(User.IsInRole("User"))
+                        linkbutton1.Enabled=false;
                 }
                 else if (status == "2")
                 {
@@ -102,13 +105,13 @@ namespace TranslationSys
             if (User.IsInRole("User"))
             {
                 SqlDataSource1.SelectParameters.Add(new Parameter("UserId"));
-                SqlDataSource1.SelectCommand = "SELECT [Status], [Type], [Date], [Title], [FileName] FROM [DataTable] WHERE ([UserId] = @UserId)";
+                SqlDataSource1.SelectCommand = "SELECT [Status], [Type], [Date], [Title], [FileName],[FileId] FROM [DataTable] WHERE ([UserId] = @UserId)";
                 SqlDataSource1.SelectParameters["UserId"].DefaultValue = User.Identity.GetUserId();
             }
             else
             {
                 SqlDataSource1.SelectParameters.Add(new Parameter("TranslatorID"));
-                SqlDataSource1.SelectCommand = "SELECT [Status], [Type], [Date], [Title], [FileName] FROM [DataTable] WHERE ([TranslatorID] is NULL) or ([TranslatorID] = @TranslatorID)";
+                SqlDataSource1.SelectCommand = "SELECT [Status], [Type], [Date], [Title], [FileName],[FileId] FROM [DataTable] WHERE ([TranslatorID] is NULL) or ([TranslatorID] = @TranslatorID)";
                 SqlDataSource1.SelectParameters["TranslatorID"].DefaultValue = User.Identity.GetUserId();
             }
             
@@ -121,9 +124,23 @@ namespace TranslationSys
 
         protected void LinkButteon1_Click(object sender, EventArgs e)
         {
+
             LinkButton linkbutton1 = (LinkButton)sender;
             string x = linkbutton1.CommandArgument;
-            string y = x;
+            Session["Edit_File"] = x;
+            if (!User.IsInRole("User"))
+            {
+                System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True");
+                connection.Open();
+                String updateSQL = "Update DataTable Set Status=1 ,TranslatorID='"+User.Identity.GetUserId()+"' Where FileId='"+x+"'";
+                System.Data.SqlClient.SqlCommand myCommand = new System.Data.SqlClient.SqlCommand(updateSQL, connection);
+                myCommand.ExecuteNonQuery();
+                connection.Close();
+            }
+
+
+            Response.Redirect("~/App_User/Edit");
+
         }
     }
 

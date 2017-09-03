@@ -210,6 +210,7 @@
     <Content Include="Account\VerifyPhoneNumber.aspx" />
     <Content Include="App_User\Home.aspx" />
     <Content Include="App_User\New.aspx" />
+    <Content Include="App_User\Edit.aspx" />
     <Content Include="App_User\New_2.aspx" />
     <Content Include="bin\Antlr3.Runtime.dll" />
     <Content Include="bin\Antlr3.Runtime.pdb" />
@@ -661,6 +662,13 @@
     </Compile>
     <Compile Include="App_User\New.aspx.designer.cs">
       <DependentUpon>New.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App_User\Edit.aspx.cs">
+      <DependentUpon>Edit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_User\Edit.aspx.designer.cs">
+      <DependentUpon>Edit.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_User\New_2.aspx.cs">
       <DependentUpon>New_2.aspx</DependentUpon>

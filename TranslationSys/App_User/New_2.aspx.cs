@@ -1373,8 +1373,10 @@ namespace TranslationSys
             System.IO.FileInfo file2 = new System.IO.FileInfo(fileName);
             if (file2.Exists)
             {
+                string id = Guid.NewGuid().ToString();
                 getID(getCode());
-                String strSQL = "Insert into DataTable (FileName,Date,Type,Status,Title,UserId) Values (@fileName,@date,@type,@status,@title,@userid)";
+                String strSQL = "Insert into DataTable (FileName,Date,Type,Status,Title,UserId,FileId,Department) Values (@fileName,@date,@type,@status,@title,@userid,@fileid,@department)";
+
                 SqlCommand myCommand = new SqlCommand(strSQL, connection);
                 myCommand.Parameters.AddWithValue("@fileName", fn);
                 myCommand.Parameters.AddWithValue("@date", txtDatePicker.Text);
@@ -1382,9 +1384,11 @@ namespace TranslationSys
                 myCommand.Parameters.AddWithValue("@status", 0);
                 myCommand.Parameters.AddWithValue("@title", InputTitleZH.Text);
                 myCommand.Parameters.AddWithValue("@userid", User.Identity.GetUserId().ToString());
+                myCommand.Parameters.AddWithValue("@fileid", id);
+                myCommand.Parameters.AddWithValue("@department", Session["School"].ToString());
                 myCommand.ExecuteNonQuery();
 
-                string id = Guid.NewGuid().ToString();
+                
                 String insertSQLZH = "Insert into Data (ID,Language,Title";
                 for (int i = 1; i <= x; i++)
                 {
@@ -1436,8 +1440,10 @@ namespace TranslationSys
                 Response.AddHeader("Content-Length", file2.Length.ToString());
                 Response.ContentType = "application/octet-stream";
                 Response.WriteFile(file2.FullName);
-                Response.End();
 
+                connection.Close();
+                Response.Redirect("~/App_User/Home");
+                Response.End();
 
             }
             else
@@ -1446,6 +1452,7 @@ namespace TranslationSys
             }
             connection.Close();
             Response.Write("輸出成功");
+
 
 
         }
